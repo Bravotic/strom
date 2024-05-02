@@ -132,100 +132,121 @@ size_t S_read(void *buffer, size_t size, size_t count, STREAM *sd) {
 }
 
 char *S_readWord(STREAM *sd) {
-    size_t wordPtr, returnBufferPtr, returnBufferSize;
-    char *returnBuffer;
+    if (sd->flags & S_READ) {
+        size_t wordPtr, returnBufferPtr, returnBufferSize;
+        char *returnBuffer;
 
-    returnBuffer = (char*)malloc(sizeof(char) * S_BUFFERSIZE);
-    returnBufferPtr = 0;
-    returnBufferSize = S_BUFFERSIZE;
+        returnBuffer = (char *) malloc(sizeof(char) * S_BUFFERSIZE);
+        returnBufferPtr = 0;
+        returnBufferSize = S_BUFFERSIZE;
 
-    /* FIXME: This loop could use a rework */
-    for (wordPtr = 0;;wordPtr++) {
+        /* FIXME: This loop could use a rework */
+        for (wordPtr = 0;; wordPtr++) {
 
-        /* If our pointer plus wordPtr equals the size of the buffer, we need
-         * to copy the current word we have been reading to our return buffer
-         * are refill the stream buffer. Or if we hit a space, we need to copy
-         * the word into the buffer and quit. */
-        if (sd->ptr + wordPtr >= sd->size || sd->buffer[sd->ptr + wordPtr] <= ' ') {
-            /* Increase the size of our return buffer if needed */
-            if (returnBufferPtr + wordPtr >= returnBufferSize) {
-                returnBufferSize += wordPtr + 1;
-                returnBuffer = realloc(returnBuffer, returnBufferSize * sizeof(char));
+            /* If our pointer plus wordPtr equals the size of the buffer, we need
+             * to copy the current word we have been reading to our return buffer
+             * are refill the stream buffer. Or if we hit a space, we need to copy
+             * the word into the buffer and quit. */
+            if (sd->ptr + wordPtr >= sd->size ||
+                sd->buffer[sd->ptr + wordPtr] <= ' ') {
+                /* Increase the size of our return buffer if needed */
+                if (returnBufferPtr + wordPtr >= returnBufferSize) {
+                    returnBufferSize += wordPtr + 1;
+                    returnBuffer = realloc(returnBuffer,
+                                           returnBufferSize * sizeof(char));
 
-            }
+                }
 
-            memcpy(&returnBuffer[returnBufferPtr], &sd->buffer[sd->ptr], wordPtr * sizeof(char));
-            returnBufferPtr += wordPtr;
+                memcpy(&returnBuffer[returnBufferPtr], &sd->buffer[sd->ptr],
+                       wordPtr * sizeof(char));
+                returnBufferPtr += wordPtr;
 
-            if (sd->ptr + wordPtr >= sd->size) {
-                sd->bufferFunction.fill(sd);
-                wordPtr = 0;
-            }
+                if (sd->ptr + wordPtr >= sd->size) {
+                    sd->bufferFunction.fill(sd);
+                    wordPtr = 0;
+                }
 
-            if (S_eof(sd) || sd->buffer[sd->ptr + wordPtr] <= ' '){
-                returnBuffer[returnBufferPtr] = 0;
-                sd->ptr += wordPtr + 1;
+                if (S_eof(sd) || sd->buffer[sd->ptr + wordPtr] <= ' ') {
+                    returnBuffer[returnBufferPtr] = 0;
+                    sd->ptr += wordPtr + 1;
 
-                return returnBuffer;
+                    return returnBuffer;
+                }
             }
         }
+    }
+    else {
+        return NULL;
     }
 }
 
 char *S_readUntil(STREAM *sd, char delimiter) {
-    size_t wordPtr, returnBufferPtr, returnBufferSize;
-    char *returnBuffer;
+    if (sd->flags & S_READ) {
+        size_t wordPtr, returnBufferPtr, returnBufferSize;
+        char *returnBuffer;
 
-    returnBuffer = (char*)malloc(sizeof(char) * S_BUFFERSIZE);
-    returnBufferPtr = 0;
-    returnBufferSize = S_BUFFERSIZE;
+        returnBuffer = (char *) malloc(sizeof(char) * S_BUFFERSIZE);
+        returnBufferPtr = 0;
+        returnBufferSize = S_BUFFERSIZE;
 
-    /* FIXME: This loop could _also_ use a rework */
-    for (wordPtr = 0;;wordPtr++) {
+        /* FIXME: This loop could _also_ use a rework */
+        for (wordPtr = 0;; wordPtr++) {
 
-        /* If our pointer plus wordPtr equals the size of the buffer, we need
-         * to copy the current word we have been reading to our return buffer
-         * are refill the stream buffer. Or if we hit a space, we need to copy
-         * the word into the buffer and quit. */
-        if (sd->ptr + wordPtr >= sd->size || sd->buffer[sd->ptr + wordPtr] == delimiter) {
-            /* Increase the size of our return buffer if needed */
-            if (returnBufferPtr + wordPtr >= returnBufferSize) {
-                returnBufferSize += wordPtr + 1;
-                returnBuffer = realloc(returnBuffer, returnBufferSize * sizeof(char));
+            /* If our pointer plus wordPtr equals the size of the buffer, we need
+             * to copy the current word we have been reading to our return buffer
+             * are refill the stream buffer. Or if we hit a space, we need to copy
+             * the word into the buffer and quit. */
+            if (sd->ptr + wordPtr >= sd->size ||
+                sd->buffer[sd->ptr + wordPtr] == delimiter) {
+                /* Increase the size of our return buffer if needed */
+                if (returnBufferPtr + wordPtr >= returnBufferSize) {
+                    returnBufferSize += wordPtr + 1;
+                    returnBuffer = realloc(returnBuffer,
+                                           returnBufferSize * sizeof(char));
 
-            }
+                }
 
-            memcpy(&returnBuffer[returnBufferPtr], &sd->buffer[sd->ptr], wordPtr * sizeof(char));
-            returnBufferPtr += wordPtr;
+                memcpy(&returnBuffer[returnBufferPtr], &sd->buffer[sd->ptr],
+                       wordPtr * sizeof(char));
+                returnBufferPtr += wordPtr;
 
-            if (sd->ptr + wordPtr >= sd->size) {
-                sd->bufferFunction.fill(sd);
-                wordPtr = 0;
-            }
+                if (sd->ptr + wordPtr >= sd->size) {
+                    sd->bufferFunction.fill(sd);
+                    wordPtr = 0;
+                }
 
-            if (S_eof(sd) || sd->buffer[sd->ptr + wordPtr] == delimiter){
-                returnBuffer[returnBufferPtr] = 0;
-                sd->ptr += wordPtr + 1;
+                if (S_eof(sd) || sd->buffer[sd->ptr + wordPtr] == delimiter) {
+                    returnBuffer[returnBufferPtr] = 0;
+                    sd->ptr += wordPtr + 1;
 
-                return returnBuffer;
+                    return returnBuffer;
+                }
             }
         }
+    }
+    else {
+        return NULL;
     }
 }
 
 char *S_readLine(ISTREAM *sd) {
-    char *word;
-    size_t len;
+    if (sd->flags & S_READ) {
+        char *word;
+        size_t len;
 
-    word = S_readUntil(sd, '\n');
-    len = strlen(word);
+        word = S_readUntil(sd, '\n');
+        len = strlen(word);
 
-    /* Truncate \r from the end of the string, this will happen on Windows
-     * systems and various network protocols, which will use the line ending
-     * \r\n instead of just \n which most programmers expect. */
-    if (word[len - 1] == '\r') {
-        word[len - 1] = 0;
+        /* Truncate \r from the end of the string, this will happen on Windows
+         * systems and various network protocols, which will use the line ending
+         * \r\n instead of just \n which most programmers expect. */
+        if (word[len - 1] == '\r') {
+            word[len - 1] = 0;
+        }
+
+        return word;
     }
-
-    return word;
+    else {
+        return NULL;
+    }
 }
