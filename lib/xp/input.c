@@ -2,47 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*
- * Create a new blank stream. This function is semi-private. It is desigend to
- * be used by libraries which implement streams. If you are trying to create a
- * stream to use, for instance, a file stream, please use their specific "open"
- * functions. This function will only create a blank, and ultimately useless
- * stream.
- */
-STREAM *S_createStream() {
-    STREAM *sd;
-
-    sd = (STREAM*)malloc(sizeof(STREAM));
-    
-    sd->buffer = (char*)malloc(S_BUFFERSIZE * sizeof(char));
-
-    sd->ptr = 0;
-    sd->size = 0;
-    sd->flags = 0;
-
-    return sd;
-}
-
-/*
- * Semi-private function to destroy a stream. it ONLY touches the stream itself,
- * and NOT the underlying native handle. If you want to completely destroy a
- * stream, please use the function from whatever implements the stream, for
- * example if you opened a file with S_openFileInput, close it with
- * S_closeFileInput.
- *
- * Make sure to use the exact function, if you open a stream that has both read
- * and write stream components, and close just the read with the wrong function,
- * it may destroy the write native handle as well.
- */
-void S_destroyStream(STREAM *sd) {
-    free(sd->buffer);
-    free(sd);
-}
-
-/*
- * Works exactly like the standard library fgetc() or the posix getch(). Gets a
- * single character from the stream. Returns -1 on error.
- */
 int S_getch(ISTREAM *sd) {
     /* If we are not able to read, or we have nothing left to read, we should
      * return an error, in this case a -1 */
@@ -50,14 +9,15 @@ int S_getch(ISTREAM *sd) {
         return -1;
     }
 
-    /* If both the previous conditions are not met, we just return the next char
-     * in our buffer */
+    /* If we are able to read, return the next character (if we can) */
     else {
         /* If our read pointer is larger than our buffer size, we need to 
          * refill the buffer with new data */
         if (sd->ptr >= sd->size || sd->size == 0) {
             sd->bufferFunction.fill(sd);
 
+            /* After trying to refill, if we find we are really at the end of
+             * the file, quit out */
             if (sd->flags & S_EOF) {
                 return -1;
             }
@@ -80,15 +40,15 @@ int S_ungetch(ISTREAM *sd, int ch) {
 
         /* If our pointer is at 0, and our buffer is full, we need to expand */
         else if (sd->ptr == 0 && sd->size == S_BUFFERSIZE) {
-           char *expandedBuffer;
-           expandedBuffer = malloc(sizeof(char) * S_BUFFERSIZE + 1);
+            char *expandedBuffer;
+            expandedBuffer = malloc(sizeof(char) * S_BUFFERSIZE + 1);
 
-           memcpy(&expandedBuffer[1], sd->buffer, S_BUFFERSIZE);
-           free(sd->buffer);
+            memcpy(&expandedBuffer[1], sd->buffer, S_BUFFERSIZE);
+            free(sd->buffer);
 
-           sd->buffer = expandedBuffer;
+            sd->buffer = expandedBuffer;
 
-           sd->buffer[sd->ptr] = (char)ch;
+            sd->buffer[sd->ptr] = (char)ch;
         }
 
         /* If our buffer isn't full, we can just shift right */
@@ -144,15 +104,15 @@ size_t S_read(void *buffer, size_t size, size_t count, STREAM *sd) {
                 break;
             }
 
-            /* If the size between our pointer and the size of our buffer is
-             * less than the amount we still need to read, we only read the
-             * lesser size as not to overflow the buffer. */
+                /* If the size between our pointer and the size of our buffer is
+                 * less than the amount we still need to read, we only read the
+                 * lesser size as not to overflow the buffer. */
             else if ((sd->size - sd->ptr) < (sizeInBytes - sizeRead)) {
                 copySize = sd->size - sd->ptr;
             }
 
-            /* If our buffer is sufficiently large, we can just read our
-             * remaining size */
+                /* If our buffer is sufficiently large, we can just read our
+                 * remaining size */
             else {
                 copySize = (sizeInBytes - sizeRead);
             }
@@ -172,9 +132,8 @@ size_t S_read(void *buffer, size_t size, size_t count, STREAM *sd) {
 }
 
 char *S_readWord(STREAM *sd) {
-    size_t wordPtr;
+    size_t wordPtr, returnBufferPtr, returnBufferSize;
     char *returnBuffer;
-    size_t returnBufferPtr, returnBufferSize;
 
     returnBuffer = (char*)malloc(sizeof(char) * S_BUFFERSIZE);
     returnBufferPtr = 0;
@@ -214,9 +173,8 @@ char *S_readWord(STREAM *sd) {
 }
 
 char *S_readUntil(STREAM *sd, char delimiter) {
-    size_t wordPtr;
+    size_t wordPtr, returnBufferPtr, returnBufferSize;
     char *returnBuffer;
-    size_t returnBufferPtr, returnBufferSize;
 
     returnBuffer = (char*)malloc(sizeof(char) * S_BUFFERSIZE);
     returnBufferPtr = 0;
