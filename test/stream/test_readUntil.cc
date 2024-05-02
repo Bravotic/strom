@@ -28,3 +28,15 @@ TEST_CASE("[Stream] S_readUntil works properly with refresh", "[StreamTests]") {
 
     S_closeTestIStream(sd);
 }
+
+TEST_CASE("[Stream] S_readUntil refuses write-only stream", "[StreamTests]") {
+    OSTREAM *sd;
+    char *word;
+    sd = S_openTestOStream();
+
+    word = S_readUntil(sd, ' ');
+
+    CHECK(word == NULL);
+
+    S_closeTestOStream(sd);
+}

@@ -69,7 +69,7 @@ TEST_CASE("[Stream] S_read fills buffer", "[StreamTests]") {
     S_closeTestIStream(sd);
 }
 
-TEST_CASE("[Stream] S_read() read from write-only stream", "[StreamTests]") {
+TEST_CASE("[Stream] S_read() refuses write-only stream", "[StreamTests]") {
     OSTREAM *sd;
     char buffer[5];
     size_t len;
@@ -78,5 +78,5 @@ TEST_CASE("[Stream] S_read() read from write-only stream", "[StreamTests]") {
     len = S_read(buffer, sizeof(char), 5, sd);
     CHECK(len == 0);
 
-    S_closeTestIStream(sd);
+    S_closeTestOStream(sd);
 }

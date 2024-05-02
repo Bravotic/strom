@@ -104,7 +104,7 @@ TEST_CASE("[Stream] S_getch properly refills buffer", "[StreamTests]") {
     S_closeTestIStream(sd);
 }
 
-TEST_CASE("[Stream] getch read from write-only stream", "[StreamTests]") {
+TEST_CASE("[Stream] getch refuses write-only stream", "[StreamTests]") {
     OSTREAM *sd;
     sd = S_openTestOStream();
 

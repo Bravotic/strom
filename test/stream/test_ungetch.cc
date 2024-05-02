@@ -45,3 +45,12 @@ TEST_CASE("[Stream] ungetch works at beginning of full buffer", "[StreamTests]")
     CHECK(S_getch(sd) == 'X');
     CHECK(S_getch(sd) == 'X');
 }
+
+TEST_CASE("[Stream] S_ungetch refuses write-only stream", "[StreamTests]") {
+    OSTREAM *sd;
+    sd = S_openTestOStream();
+
+    CHECK(-1 == S_ungetch(sd, '1'));
+
+    S_closeTestOStream(sd);
+}

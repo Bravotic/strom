@@ -23,6 +23,7 @@ struct dummyData_t {
 extern ISTREAM *S_openTestIStream(int count, dummyType_t type);
 
 extern void S_closeTestIStream(ISTREAM *sd);
+extern void S_closeTestOStream(OSTREAM *sd);
 
 extern OSTREAM *S_openTestOStream();
 

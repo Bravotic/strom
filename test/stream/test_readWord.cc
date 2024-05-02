@@ -46,3 +46,15 @@ TEST_CASE("[Stream] S_readWord() properly increments pointer", "[StreamTests]") 
 
     S_closeTestIStream(sd);
 }
+
+TEST_CASE("[Stream] S_readWord refuses write-only stream", "[StreamTests]") {
+    OSTREAM *sd;
+    char *word;
+    sd = S_openTestOStream();
+
+    word = S_readWord(sd);
+
+    CHECK(word == NULL);
+
+    S_closeTestOStream(sd);
+}

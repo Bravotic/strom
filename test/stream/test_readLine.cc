@@ -30,3 +30,15 @@ TEST_CASE("[Stream] S_readLine truncates CR from CRLF", "[StreamTests]") {
 
     S_closeTestIStream(sd);
 }
+
+TEST_CASE("[Stream] S_readLine refuses write-only stream", "[StreamTests]") {
+    OSTREAM *sd;
+    char *word;
+    sd = S_openTestOStream();
+
+    word = S_readLine(sd);
+
+    CHECK(word == NULL);
+
+    S_closeTestOStream(sd);
+}

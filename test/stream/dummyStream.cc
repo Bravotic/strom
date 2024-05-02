@@ -83,6 +83,10 @@ void S_closeTestIStream(ISTREAM *sd) {
     S_destroyStream(sd);
 }
 
+void S_closeTestOStream(OSTREAM *sd) {
+    S_destroyStream(sd);
+}
+
 /* STUB: OSTREAM is not yet properly implemented */
 OSTREAM *S_openTestOStream() {
     STREAM *sd;
