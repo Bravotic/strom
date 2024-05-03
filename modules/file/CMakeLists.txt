@@ -7,6 +7,8 @@ set(H_FILE include/strom/file.h)
 
 if (UNIX)
     set(SRC_FILES lib/unix/file.c)
+elseif(WIN32)
+    set(SRC_FILES lib/win32/file.c)
 endif()
 
 include_directories(include/)

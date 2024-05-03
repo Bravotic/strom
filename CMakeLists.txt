@@ -10,9 +10,10 @@ if(NOT DEFINED ${STROM_BACKENDS})
 endif(NOT DEFINED ${STROM_BACKENDS})
 
 # The generic stream backend is required for all modules.
-set(SRC_FILES lib/xp/core.c
-				lib/xp/input.c
-				lib/xp/output.c)
+set(SRC_FILES 	${CMAKE_CURRENT_SOURCE_DIR}/lib/xp/core.c
+				${CMAKE_CURRENT_SOURCE_DIR}/lib/xp/input.c
+				${CMAKE_CURRENT_SOURCE_DIR}/lib/xp/output.c)
+
 set(H_FILES "include/strom/stream.h")
 set(TEST_FILES "${TEST_FILES}"
 	test/stream/dummyStream.cc
