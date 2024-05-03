@@ -14,13 +14,13 @@ enum dummyType_t {
 struct dummyData_t {
     char numPtr;
     int timesRefreshed;
-    int count;
+    size_t count;
     dummyType_t type;
 };
 
 #define TIMES_REFRESHED(sd) ((struct dummyData_t*)sd->handle.pointer)->timesRefreshed
 
-extern ISTREAM *S_openTestIStream(int count, dummyType_t type);
+extern ISTREAM *S_openTestIStream(size_t count, dummyType_t type);
 
 extern void S_closeTestIStream(ISTREAM *sd);
 extern void S_closeTestOStream(OSTREAM *sd);
