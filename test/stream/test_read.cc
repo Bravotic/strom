@@ -36,7 +36,7 @@ TEST_CASE("[Stream] S_read works properly", "[StreamTests]") {
 TEST_CASE("[Stream] S_read fills buffer", "[StreamTests]") {
     ISTREAM *sd;
     size_t len;
-    char buffer[5];
+    char buffer[10];
 
     sd = S_openTestIStream(15, TYPE_NUMBER);
 
