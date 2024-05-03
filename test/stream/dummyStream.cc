@@ -21,9 +21,7 @@ void S_testIStreamFillBuffer(STREAM *sd) {
 
     /* Otherwise we are filling the buffer */
     else {
-        const char *stringpos;
-        size_t readSize;
-        int x;
+        size_t readSize, x;
 
         /* If at our position, reading S_BUFFERSIZE would read more characters
          * than we have, then we would only want to read the remaining chars,
@@ -58,7 +56,7 @@ void S_testIStreamFillBuffer(STREAM *sd) {
     }
 }
 
-ISTREAM *S_openTestIStream(int count, dummyType_t type) {
+ISTREAM *S_openTestIStream(size_t count, dummyType_t type) {
     STREAM *sd;
     dummyData_t *dat;
 
@@ -90,7 +88,7 @@ void S_closeTestOStream(OSTREAM *sd) {
 /* STUB: OSTREAM is not yet properly implemented */
 OSTREAM *S_openTestOStream() {
     STREAM *sd;
-    dummyData_t *dat;
+    /* dummyData_t* dat; */
 
     sd = S_createStream();
 

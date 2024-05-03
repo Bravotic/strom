@@ -14,7 +14,7 @@ enum dummyType_t {
 struct dummyData_t {
     char numPtr;
     int timesRefreshed;
-    int count;
+    size_t count;
     dummyType_t type;
 };
 

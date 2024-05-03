@@ -94,7 +94,7 @@ typedef struct STREAM {
  *
  * Returns: A newly allocated stream.
  */
-STREAM *S_createStream();
+STREAM *S_createStream(void);
 
 /*
  * Semi-private function to destroy a stream. it ONLY touches the stream itself,
