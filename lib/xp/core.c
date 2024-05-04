@@ -26,6 +26,11 @@ STREAM *S_createStream(void) {
 }
 
 void S_destroyStream(STREAM *sd) {
+    /* Flush output buffers when destroyed */
+    if (sd->flags & S_WRITE) {
+        S_flush(sd);
+    }
+
     free(sd->buffer);
     free(sd);
 }

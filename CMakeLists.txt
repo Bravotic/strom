@@ -19,6 +19,7 @@ set(TEST_FILES "${TEST_FILES}"
 	test/stream/dummyStream.cc
 	test/stream/test_readLine.cc
 	test/stream/test_getch.cc
+	test/stream/test_putch.cc
 	test/stream/test_read.cc
 	test/stream/test_readUntil.cc
 	test/stream/test_readWord.cc

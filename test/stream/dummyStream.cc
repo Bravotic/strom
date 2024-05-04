@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "dummyStream.hh"
 
 char numbers[] = "0123456789";
@@ -56,6 +57,26 @@ void S_testIStreamFillBuffer(STREAM *sd) {
     }
 }
 
+void S_testOStreamFlushBuffer(STREAM *sd) {
+    dummyBufferData_t *dat;
+
+    dat = (dummyBufferData_t*)sd->handle.pointer;
+
+    /* If our stream buffer is larger than our output buffer has space, increase
+     * the size */
+    if (sd->ptr > dat->size - dat->ptr) {
+        dat->size += sd->size;
+        dat->buffer = (char*)realloc(dat->buffer, dat->size * sizeof(char));
+    }
+
+    memcpy(&dat->buffer[dat->ptr], sd->buffer, sd->ptr);
+    dat->ptr += sd->ptr;
+
+    dat->timesFlushed += 1;
+
+    sd->ptr = 0;
+}
+
 ISTREAM *S_openTestIStream(size_t count, dummyType_t type) {
     STREAM *sd;
     dummyData_t *dat;
@@ -81,21 +102,28 @@ void S_closeTestIStream(ISTREAM *sd) {
     S_destroyStream(sd);
 }
 
-void S_closeTestOStream(OSTREAM *sd) {
-    S_destroyStream(sd);
-}
-
 /* STUB: OSTREAM is not yet properly implemented */
 OSTREAM *S_openTestOStream() {
     STREAM *sd;
-    /* dummyData_t* dat; */
+    dummyBufferData_t* dat;
 
     sd = S_createStream();
 
-    sd->bufferFunction.flush = S_testIStreamFillBuffer;
+    sd->bufferFunction.flush = S_testOStreamFlushBuffer;
 
-    sd->handle.pointer = NULL;
+    dat = (dummyBufferData_t*)malloc(sizeof(dummyBufferData_t));
+
+    dat->size = 4096;
+    dat->ptr = 0;
+    dat->buffer = (char*)malloc(dat->size * sizeof(char));
+    dat->timesFlushed = 0;
+
+    sd->handle.pointer = dat;
     sd->flags |= S_WRITE;
 
     return sd;
+}
+
+void S_closeTestOStream(OSTREAM *sd) {
+    S_destroyStream(sd);
 }

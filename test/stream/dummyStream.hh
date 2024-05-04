@@ -18,13 +18,20 @@ struct dummyData_t {
     dummyType_t type;
 };
 
+struct dummyBufferData_t {
+    char *buffer;
+    size_t ptr;
+    size_t size;
+    int timesFlushed;
+};
+
 #define TIMES_REFRESHED(sd) ((struct dummyData_t*)sd->handle.pointer)->timesRefreshed
 
 extern ISTREAM *S_openTestIStream(size_t count, dummyType_t type);
 
 extern void S_closeTestIStream(ISTREAM *sd);
-extern void S_closeTestOStream(OSTREAM *sd);
 
 extern OSTREAM *S_openTestOStream();
+extern void S_closeTestOStream(OSTREAM *sd);
 
 #endif //STROM_TEST_DUMMYSTREAM_HH

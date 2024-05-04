@@ -216,4 +216,23 @@ extern char *S_readUntil(STREAM *sd, char delimiter);
  */
 extern char *S_readLine(STREAM *sd);
 
+/*
+ * Flushes an output buffer. Effectively just calls the flush function specified
+ * by the stream structure. This is optional, but verifies that the stream in
+ * question is actually an output stream, and therefore can be flushed.
+ *
+ * Arguments:
+ *  sd - the stream to flush
+ */
+extern void S_flush(OSTREAM *sd);
+
+/*
+ * Pushes a single character onto the output buffer.
+ *
+ * Arguments:
+ *  sd - The stream to write to
+ *  ch - The character to write
+ * Returns: The character pushed to the buffer.
+ */
+extern int S_putch(OSTREAM *sd, char ch);
 #endif
