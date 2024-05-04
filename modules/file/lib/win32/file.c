@@ -2,7 +2,7 @@
 #include <strom/stream.h>
 #include <windows.h>
 
-void S_fileRefillBuffer(ISTREAM *sd) {
+static void S_fileRefillBuffer(ISTREAM *sd) {
     DWORD len;
     HANDLE file;
 

@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-void S_fileRefillBuffer(ISTREAM *sd) {
-    size_t len;
+static void S_fileRefillBuffer(ISTREAM *sd) {
+    ssize_t len;
     int fd;
 
     fd = sd->handle.integer;
@@ -12,12 +12,12 @@ void S_fileRefillBuffer(ISTREAM *sd) {
     len = read(fd, sd->buffer, S_BUFFERSIZE);
 
     /* If we have read zero bytes, we can assume we hit end of file */
-    if (len == 0) {
+    if (len <= 0) {
         sd->flags |= S_EOF;
     }
     else {
         sd->ptr = 0;
-        sd->size = len;
+        sd->size = (size_t)len;
     }
 
 }

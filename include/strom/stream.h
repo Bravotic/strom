@@ -44,8 +44,8 @@ typedef struct STREAM ISTREAM;
 typedef struct STREAM OSTREAM;
 
 typedef union bufferFunction_t {
-    void ((*fill)(ISTREAM *sd));
-    void ((*flush)(OSTREAM *sd));
+    void (*fill)(ISTREAM *sd);
+    void (*flush)(OSTREAM *sd);
 } bufferFunction_t;
 
 /*

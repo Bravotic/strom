@@ -9,7 +9,7 @@ typedef struct stringdat_t {
     size_t refreshed;
 } stringdat_t;
 
-void S_stringFillReadBuffer(STREAM *sd) {
+static void S_stringFillReadBuffer(STREAM *sd) {
     stringdat_t *dat;
     size_t len, pos;
 

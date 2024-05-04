@@ -35,8 +35,14 @@ if (string IN_LIST STROM_BACKENDS)
 	set(TEST_FILES "${TEST_FILES}" test/string/test_string.cc)
 endif (string IN_LIST STROM_BACKENDS)
 
+
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(strom ${SRC_FILES} ${H_FILES})
+
+if (${STROM_TESTS})
+	target_compile_definitions(strom PUBLIC S_BUFFERSIZE=5)
+endif()
 
 target_include_directories(strom PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
