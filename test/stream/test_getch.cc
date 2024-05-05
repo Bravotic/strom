@@ -109,4 +109,6 @@ TEST_CASE("[Stream] getch refuses write-only stream", "[StreamTests]") {
     sd = S_openTestOStream();
 
     CHECK(S_getch(sd) == -1);
+
+    S_closeTestOStream(sd);
 }

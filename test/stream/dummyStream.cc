@@ -125,5 +125,11 @@ OSTREAM *S_openTestOStream() {
 }
 
 void S_closeTestOStream(OSTREAM *sd) {
+    dummyBufferData_t *dat;
+    dat = (dummyBufferData_t*)sd->handle.pointer;
+
     S_destroyStream(sd);
+    
+    free(dat->buffer);
+    free(dat);
 }

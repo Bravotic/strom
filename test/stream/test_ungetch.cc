@@ -30,6 +30,8 @@ TEST_CASE("[Stream] ungetch works in empty buffer", "[StreamTests]") {
 
     CHECK(S_ungetch(sd, 'X') == 'X');
     CHECK(S_getch(sd) == 'X');
+
+    S_closeTestIStream(sd);
 }
 
 TEST_CASE("[Stream] ungetch works at beginning of full buffer", "[StreamTests]") {
@@ -44,6 +46,8 @@ TEST_CASE("[Stream] ungetch works at beginning of full buffer", "[StreamTests]")
 
     CHECK(S_getch(sd) == 'X');
     CHECK(S_getch(sd) == 'X');
+
+    S_closeTestIStream(sd);
 }
 
 TEST_CASE("[Stream] S_ungetch refuses write-only stream", "[StreamTests]") {

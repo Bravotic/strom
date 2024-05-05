@@ -80,5 +80,10 @@ ISTREAM *S_openStringInput(const char *str) {
 }
 
 void S_closeStringInput(ISTREAM *sd) {
+    stringdat_t *dat;
+
+    dat = (stringdat_t*)sd->handle.pointer;
     S_destroyStream(sd);
+
+    free(dat);
 }

@@ -38,5 +38,6 @@ TEST_CASE("[Stream] S_readUntil refuses write-only stream", "[StreamTests]") {
 
     CHECK(word == NULL);
 
+    free(word);
     S_closeTestOStream(sd);
 }
