@@ -230,9 +230,33 @@ extern void S_flush(OSTREAM *sd);
  * Pushes a single character onto the output buffer.
  *
  * Arguments:
- *  sd - The stream to write to
  *  ch - The character to write
+ *  sd - The stream to write to
  * Returns: The character pushed to the buffer.
  */
-extern int S_putch(OSTREAM *sd, char ch);
+extern int S_putch(char ch, OSTREAM *sd);
+
+/*
+ * Writes a buffer onto the output buffer.
+ *
+ * Arguments:
+ *  buffer - an array of any type which will be written onto the output buffer.
+ *  size   - the size of the datatype being written, for example sizeof(char).
+ *  count  - the amount of the datatype that is to be written.
+ *  sd     - the stream to write to.
+ *
+ * Returns: The amount of characters written.
+ */
+extern size_t S_write(const void *buffer, size_t size, size_t count, OSTREAM *sd);
+
+/*
+ * Writes a string to the output buffer.
+ *
+ * Arguments:
+ *  str - the string to write.
+ *  sd  - the stream to write to.
+ *
+ * Returns: 0 if successful, anything else if error.
+ */
+extern int S_puts(const char *str, OSTREAM *sd);
 #endif

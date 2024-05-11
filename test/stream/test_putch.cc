@@ -15,7 +15,7 @@ TEST_CASE("[Stream] S_putch works correctly", "[StreamTests]") {
     // We should start at ptr = 0. Basically make sure wehn we put data we
     // increase the pointer and don't flush the data.
     CHECK(sd->ptr == 0);
-    charOne = S_putch(sd, '1');
+    charOne = S_putch('1', sd);
     CHECK(sd->ptr == 1);
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
 
@@ -26,7 +26,7 @@ TEST_CASE("[Stream] S_putch works correctly", "[StreamTests]") {
     CHECK(sd->buffer[0] == '1');
 
     CHECK(sd->ptr == 1);
-    charTwo = S_putch(sd, '2');
+    charTwo = S_putch('2', sd);
     CHECK(sd->ptr == 2);
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
 
@@ -53,27 +53,27 @@ TEST_CASE("[Stream] S_putch flushes buffer when full", "[StreamTests]") {
     REQUIRE(sd->bufferFunction.flush != NULL);
     REQUIRE(S_BUFFERSIZE == 5);
 
-    CHECK(S_putch(sd, '1') == '1');
+    CHECK(S_putch('1', sd) == '1');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
     CHECK(sd->ptr == 1);
 
-    CHECK(S_putch(sd, '2') == '2');
+    CHECK(S_putch('2', sd) == '2');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
     CHECK(sd->ptr == 2);
 
-    CHECK(S_putch(sd, '3') == '3');
+    CHECK(S_putch('3', sd) == '3');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
     CHECK(sd->ptr == 3);
 
-    CHECK(S_putch(sd, '4') == '4');
+    CHECK(S_putch('4', sd) == '4');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
     CHECK(sd->ptr == 4);
 
-    CHECK(S_putch(sd, '5') == '5');
+    CHECK(S_putch('5', sd) == '5');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
     CHECK(sd->ptr == 5);
 
-    CHECK(S_putch(sd, '6') == '6');
+    CHECK(S_putch('6', sd) == '6');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 1);
     CHECK(sd->ptr == 1);
 
@@ -85,14 +85,14 @@ TEST_CASE("[Stream] OutputBuffer incomplete flush appends data", "[StreamTests]"
 
     sd = S_openTestOStream();
 
-    CHECK(S_putch(sd, '1') == '1');
+    CHECK(S_putch('1', sd) == '1');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 0);
     CHECK(sd->ptr == 1);
 
     S_flush(sd);
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 1);
 
-    CHECK(S_putch(sd, '2') == '2');
+    CHECK(S_putch('2', sd) == '2');
     CHECK(((dummyBufferData_t*)(sd->handle.pointer))->timesFlushed == 1);
     CHECK(sd->ptr == 1);
 

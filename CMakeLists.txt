@@ -20,10 +20,12 @@ set(TEST_FILES "${TEST_FILES}"
 	test/stream/test_readLine.cc
 	test/stream/test_getch.cc
 	test/stream/test_putch.cc
+	test/stream/test_puts.cc
 	test/stream/test_read.cc
 	test/stream/test_readUntil.cc
 	test/stream/test_readWord.cc
-	test/stream/test_ungetch.cc)
+	test/stream/test_ungetch.cc
+	test/stream/test_write.cc)
 
 if (file IN_LIST STROM_BACKENDS)
 	add_subdirectory(modules/file)
